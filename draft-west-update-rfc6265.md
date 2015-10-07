@@ -32,20 +32,73 @@ normative:
   RFC5234:
   RFC5890:
   USASCII:
+    target: ANSI X3.4
+    title: "Coded Character Set -- 7-bit American Standard Code for Information Interchange"
+    date: 1986
+    author:
+      name: American National Standards Institute
 
 informative:
   RFC2109:
   RFC2965:
   RFC2818:
   Netscape:
+    target: http://web.archive.org/web/20020803110822/http://wp.netscape.com/newsref/std/cookie_spec.html
+    title: "Persistent Client State -- HTTP Cookies"
+    date: 1999
+    author:
+      name: Netscape Communications Corp.
   Kri2001:
+    target: http://arxiv.org/abs/cs.SE/0105018
+    title: "HTTP Cookies: Standards, Privacy, and Politics"
+    seriesinfo:
+      ACM: "ACM Transactions on Internet Technology Vol. 1, #2"
+    date: November 2001
+    author:
+      name: David M. Kristol
+      ins: D. Kristol
   RFC3629:
   RFC4648:
   RFC3864:
   RFC5895:
   UTS46:
+    target: http://unicode.org/reports/tr46/
+    title: "Unicode IDNA Compatibility Processing"
+    seriesinfo:
+      UNICODE: "Unicode Technical Standards # 46"
+    date: 2010
+    author:
+    -
+      ins: M. Davis
+      name: Mark Davis
+    -
+      ins: M. Suignard
+      name: Michel Suignard
   CSRF:
+    target: http://portal.acm.org/citation.cfm?id=1455770.1455782
+    title: Robust Defenses for Cross-Site Request Forgery
+    date: 2008
+    author:
+    -
+      ins: A. Barth
+      name: Adam Barth
+    -
+      ins: C. Jackson
+    -
+      ins: J. Mitchell
   Aggarwal2010:
+  author:
+  -
+    ins: G. Aggarwal
+  -
+    ins: E. Burzstein
+  -
+    ins: C. Jackson
+  -
+    ins: D. Boneh
+  title: "An Analysis of Private Browsing Modes in Modern Browsers"
+  date: 2010
+  target: http://www.usenix.org/events/sec10/tech/full_papers/Aggarwal.pdf
 
 --- abstract
 
