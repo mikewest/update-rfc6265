@@ -105,9 +105,9 @@ informative:
 This document defines the HTTP `Cookie` and `Set-Cookie` header fields. These
 header fields can be used by HTTP servers to store state (called cookies) at
 HTTP user agents, letting the servers maintain a stateful session over the
-mostly stateless HTTP protocol.  Although cookies have many historical
+mostly stateless HTTP protocol. Although cookies have many historical
 infelicities that degrade their security and privacy, the Cookie and Set-Cookie
-header fields are widely used on the Internet.  This document obsoletes RFC
+header fields are widely used on the Internet. This document obsoletes RFC
 2965.
 
 --- middle
@@ -123,14 +123,14 @@ header.
 
 Although simple on their surface, cookies have a number of complexities. For
 example, the server indicates a scope for each cookie when sending it to the
-user agent.  The scope indicates the maximum amount of time in which the user
+user agent. The scope indicates the maximum amount of time in which the user
 agent should return the cookie, the servers to which the user agent should
 return the cookie, and the URI schemes for which the cookie is applicable.
 
 For historical reasons, cookies contain a number of security and privacy
-infelicities.  For example, a server can indicate that a given cookie is
+infelicities. For example, a server can indicate that a given cookie is
 intended for "secure" connections, but the `Secure` attribute does not provide
-integrity in the presence of an active network attacker.  Similarly, cookies
+integrity in the presence of an active network attacker. Similarly, cookies
 for a given host are shared across all the ports on that host, even though the
 usual "same-origin policy" used by web browsers isolates content retrieved via
 different ports.
@@ -146,28 +146,28 @@ User agents MUST implement the more liberal processing rules defined in Section
 conform to the well-behaved profile defined in Section 4.
 
 This document specifies the syntax and semantics of these headers as they are
-actually used on the Internet.  In particular, this document does not create
+actually used on the Internet. In particular, this document does not create
 new syntax or semantics beyond those in use today. The recommendations for
 cookie generation provided in Section 4 represent a preferred subset of current
 server behavior, and even the more liberal cookie processing algorithm provided
 in Section 5 does not recommend all of the syntactic and semantic variations in
-use today.  Where some existing software differs from the recommended protocol
+use today. Where some existing software differs from the recommended protocol
 in significant ways, the document contains a note explaining the difference.
 
 Prior to this document, there were at least three descriptions of cookies: the
 so-called "Netscape cookie specification" {{Netscape}}, RFC 2109 {{RFC2109}},
-and RFC 2965 {{RFC2965}}.  However, none of these documents describe how the
+and RFC 2965 {{RFC2965}}. However, none of these documents describe how the
 `Cookie` and `Set-Cookie` headers are actually used on the Internet (see
-{{Kri2001}} for historical context).  In relation to previous IETF
+{{Kri2001}} for historical context). In relation to previous IETF
 specifications of HTTP state management mechanisms, this document requests the
 following actions:
 
-1.  Change the status of {{RFC2109}} to Historic (it has already been obsoleted
+1. Change the status of {{RFC2109}} to Historic (it has already been obsoleted
     by {{RFC2965}}).
 
-2.  Change the status of {{RFC2965}} to Historic.
+2. Change the status of {{RFC2965}} to Historic.
 
-3.  Indicate that {{RFC2965}} has been obsoleted by this document.
+3. Indicate that {{RFC2965}} has been obsoleted by this document.
 
 In particular, in moving RFC 2965 to Historic and obsoleting it, this document
 deprecates the use of the `Cookie2` and `Set-Cookie2` header fields.
@@ -247,7 +247,7 @@ the `Cookie` header or use its contents for an application-defined purpose.
 Origin servers MAY send a `Set-Cookie` response header with any response. User
 agents MAY ignore `Set-Cookie` headers contained in responses with 100-level
 status codes but MUST process `Set-Cookie` headers contained in other responses
-(including responses with 400- and 500-level status codes).  An origin server
+(including responses with 400- and 500-level status codes). An origin server
 can include multiple `Set-Cookie` header fields in a single response. The
 presence of a `Cookie` or a `Set-Cookie` header field does not preclude HTTP
 caches from storing and reusing a response.
@@ -311,7 +311,7 @@ Cookie: SID=31d4d96e407aad42; lang=en-US
 Notice that the `Cookie` header above contains two cookies, one named `SID` and
 one named `lang`. If the server wishes the user agent to persist the cookie over
 multiple "sessions" (e.g., user agent restarts), the server can specify an
-expiration date in the `Expires` attribute.  Note that the user agent might
+expiration date in the `Expires` attribute. Note that the user agent might
 delete the cookie before the expiration date if the user agent's cookie store
 exceeds its quota or if the user manually deletes the server's cookie.
 
@@ -326,7 +326,7 @@ Cookie: SID=31d4d96e407aad42; lang=en-US
 ~~~
 
 Finally, to remove a cookie, the server returns a `Set-Cookie` header with an
-expiration date in the past.  The server will be successful in removing the
+expiration date in the past. The server will be successful in removing the
 cookie only if the `Path` and the `Domain` attribute in the Set-Cookie header
 match the values used when the cookie was created.
 
@@ -353,7 +353,7 @@ the user agent.
 ### Syntax
 
 Informally, the `Set-Cookie` response header contains the header name
-"Set-Cookie" followed by a ":" and a cookie.  Each cookie begins with a
+"Set-Cookie" followed by a ":" and a cookie. Each cookie begins with a
 `name-value-pair`, followed by zero or more `attribute-value` pairs. Servers
 SHOULD NOT send `Set-Cookie` headers that fail to conform to the following
 grammar:
@@ -371,8 +371,8 @@ cookie-octet      = %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
 token             = <token, defined in [RFC2616], Section 2.2>
 
 cookie-av         = expires-av / max-age-av / domain-av /
-                   path-av / secure-av / httponly-av /
-                   extension-av
+                    path-av / secure-av / httponly-av /
+                    extension-av
 expires-av        = "Expires=" sane-cookie-date
 sane-cookie-date  = <rfc1123-date, defined in [RFC2616], Section 3.3.1>
 max-age-av        = "Max-Age=" non-zero-digit *DIGIT
@@ -383,8 +383,8 @@ non-zero-digit    = %x31-39
                       ; digits 1 through 9
 domain-av         = "Domain=" domain-value
 domain-value      = <subdomain>
-                      ; defined in {{RFC1034}}, Section 3.5, as
-                      ; enhanced by {{RFC1123}}, Section 2.1
+                      ; defined in [RFC1034], Section 3.5, as
+                      ; enhanced by [RFC1123], Section 2.1
 path-av           = "Path=" path-value
 path-value        = <any CHAR except CTLs or ";">
 secure-av         = "Secure"
@@ -408,7 +408,7 @@ NOT produce two attributes with the same name in the same `set-cookie-string`.
 (See Section 5.3 for how user agents handle this case.)
 
 Servers SHOULD NOT include more than one `Set-Cookie` header field in the same
-response with the same `cookie-name`.  (See Section 5.2 for how user agents
+response with the same `cookie-name`. (See Section 5.2 for how user agents
 handle this case.)
 
 If a server sends multiple responses containing `Set-Cookie` headers
@@ -417,7 +417,7 @@ over multiple sockets), these responses create a "race condition" that can lead
 to unpredictable behavior.
 
 NOTE: Some existing user agents differ in their interpretation of two-digit
-years.  To avoid compatibility issues, servers SHOULD use the `rfc1123-date`
+years. To avoid compatibility issues, servers SHOULD use the `rfc1123-date`
 format, which requires a four-digit year.
 
 NOTE: Some user agents store and process dates in cookies as 32-bit UNIX time_t
@@ -429,10 +429,10 @@ incorrectly.
 
 This section describes simplified semantics of the `Set-Cookie` header. These
 semantics are detailed enough to be useful for understanding the most common
-uses of cookies by servers.  The full semantics are described in Section 5.
+uses of cookies by servers. The full semantics are described in Section 5.
 
 When the user agent receives a `Set-Cookie` header, the user agent stores the
-cookie together with its attributes.  Subsequently, when the user agent makes
+cookie together with its attributes. Subsequently, when the user agent makes
 an HTTP request, the user agent includes the applicable, non-expired cookies
 in the `Cookie` header.
 
@@ -475,14 +475,14 @@ user agent).
 The `Domain` attribute specifies those hosts to which the cookie will be sent.
 For example, if the value of the `Domain` attribute is "example.com", the user
 agent will include the cookie in the Cookie header when making HTTP requests to
-`example.com`, `www.example.com`, and `www.corp.example.com`.  (Note that a
+`example.com`, `www.example.com`, and `www.corp.example.com`. (Note that a
 leading %x2E ("."), if present, is ignored even though that character is not
 permitted, but a trailing %x2E ("."), if present, will cause the user agent to
 ignore the attribute.)  If the server omits the `Domain` attribute, the user
 agent will return the cookie only to the origin server.
 
 WARNING: Some existing user agents treat an absent `Domain` attribute as if the
-`Domain` attribute were present and contained the current host name.  For
+`Domain` attribute were present and contained the current host name. For
 example, if example.com returns a `Set-Cookie` header without a `Domain`
 attribute, these user agents will erroneously send the cookie to
 `www.example.com` as well.
@@ -495,7 +495,7 @@ a cookie with a `Domain` attribute of "bar.example.com" or of
 "baz.foo.example.com".
 
 NOTE: For security reasons, many user agents are configured to reject `Domain`
-attributes that correspond to "public suffixes".  For example, some user
+attributes that correspond to "public suffixes". For example, some user
 agents will reject `Domain` attributes of "com" or "co.uk". (See Section 5.3 for
 more information.)
 
@@ -518,7 +518,7 @@ Section 8).
 #### The Secure Attribute
 
 The `Secure` attribute limits the scope of the cookie to "secure" channels
-(where "secure" is defined by the user agent).  When a cookie has the `Secure`
+(where "secure" is defined by the user agent). When a cookie has the `Secure`
 attribute, the user agent will include the cookie in an HTTP request only if
 the request is transmitted over a secure channel (typically HTTP over Transport
 Layer Security (TLS) {{RFC2818}}).
@@ -558,7 +558,7 @@ Each `cookie-pair` represents a cookie stored by the user agent. The
 `cookie-pair` contains the `cookie-name` and `cookie-value` the user agent
 received in the `Set-Cookie` header.
 
-Notice that the cookie attributes are not returned.  In particular, the server
+Notice that the cookie attributes are not returned. In particular, the server
 cannot determine from the `Cookie` header alone when a cookie will expire, for
 which hosts the cookie is valid, for which paths the cookie is valid, or
 whether the cookie was set with the `Secure` or `HttpOnly` attributes.
@@ -593,11 +593,11 @@ subcomponents of the `Cookie` and `Set-Cookie` headers.
 ### Dates
 
 The user agent MUST use an algorithm equivalent to the following algorithm to
-parse a `cookie-date`.  Note that the various boolean flags defined as a part
+parse a `cookie-date`. Note that the various boolean flags defined as a part
 of the algorithm (i.e., `found-time`, `found-day-of-month`, `found-month`,
 `found-year`) are initially "not set".
 
-1.  Using the grammar below, divide the `cookie-date` into `date-tokens`.
+1. Using the grammar below, divide the `cookie-date` into `date-tokens`.
 
     ~~~
     cookie-date     = *delimiter date-token-list *delimiter
@@ -618,39 +618,39 @@ of the algorithm (i.e., `found-time`, `found-day-of-month`, `found-month`,
     time-field      = 1*2DIGIT
     ~~~
 
-2.  Process each `date-token` sequentially in the order the `date-token`s
+2. Process each `date-token` sequentially in the order the `date-token`s
     appear in the `cookie-date`:
 
-    1.  If the `found-time` flag is not set and the token matches the
+    1. If the `found-time` flag is not set and the token matches the
         `time` production, set the `found-time` flag and set the `hour-value`,
         `minute-value`, and `second-value` to the numbers denoted by the digits
         in the `date-token`, respectively. Skip the remaining sub-steps and
         continue to the next `date-token`.
 
-    2.  If the `found-day-of-month` flag is not set and the `date-token` matches
+    2. If the `found-day-of-month` flag is not set and the `date-token` matches
         the `day-of-month` production, set the `found-day-of-month` flag and set
         the `day-of-month-value` to the number denoted by the `date-token`. Skip
         the remaining sub-steps and continue to the next `date-token`.
 
-    3.  If the `found-month` flag is not set and the `date-token` matches the
+    3. If the `found-month` flag is not set and the `date-token` matches the
         `month` production, set the `found-month` flag and set the `month-value`
         to the month denoted by the `date-token`. Skip the remaining sub-steps
         and continue to the next `date-token`.
 
-    4.  If the `found-year` flag is not set and the `date-token` matches the
+    4. If the `found-year` flag is not set and the `date-token` matches the
         `year` production, set the `found-year` flag and set the `year-value` to
-        the number denoted by the `date-token`.  Skip the remaining sub-steps
+        the number denoted by the `date-token`. Skip the remaining sub-steps
         and continue to the next `date-token`.
 
-3.  If the `year-value` is greater than or equal to 70 and less than or equal to
+3. If the `year-value` is greater than or equal to 70 and less than or equal to
     99, increment the `year-value` by 1900.
 
-4.  If the `year-value` is greater than or equal to 0 and less than or equal to
+4. If the `year-value` is greater than or equal to 0 and less than or equal to
     69, increment the `year-value` by 2000.
 
-    1.  NOTE: Some existing user agents interpret two-digit years differently.
+    1. NOTE: Some existing user agents interpret two-digit years differently.
 
-5.  Abort these steps and fail to parse the `cookie-date` if:
+5. Abort these steps and fail to parse the `cookie-date` if:
 
     *  at least one of the `found-day-of-month`, `found-month`, `found-year`, or
        `found-time` flags is not set,
@@ -667,27 +667,27 @@ of the algorithm (i.e., `found-time`, `found-day-of-month`, `found-month`,
 
     (Note that leap seconds cannot be represented in this syntax.)
 
-6.  Let the `parsed-cookie-date` be the date whose `day-of-month`, `month`,
+6. Let the `parsed-cookie-date` be the date whose `day-of-month`, `month`,
     `year`, `hour`, `minute`, and `second` (in UTC) are the
     `day-of-month-value`, the `month-value`, the `year-value`, the `hour-value`,
-    the `minute-value`, and the `second-value`, respectively.  If no such date
+    the `minute-value`, and the `second-value`, respectively. If no such date
     exists, abort these steps and fail to parse the `cookie-date`.
 
-7.  Return the `parsed-cookie-date` as the result of this algorithm.
+7. Return the `parsed-cookie-date` as the result of this algorithm.
 
 ### Canonicalized Host Names
 
 A canonicalized host name is the string generated by the following algorithm:
 
-1.  Convert the host name to a sequence of individual domain name labels.
+1. Convert the host name to a sequence of individual domain name labels.
 
-2.  Convert each label that is not a Non-Reserved LDH (NR-LDH) label, to an
+2. Convert each label that is not a Non-Reserved LDH (NR-LDH) label, to an
     A-label (see Section 2.3.2.1 of {{RFC5890}} for the former and latter), or
     to a "punycode label" (a label resulting from the "ToASCII" conversion in
     Section 4 of {{RFC3490}}), as appropriate (see Section 6.3 of this
     specification).
 
-3.  Concatenate the resulting labels, separated by a %x2E (".") character.
+3. Concatenate the resulting labels, separated by a %x2E (".") character.
 
 ### Domain Matching
 
@@ -712,20 +712,20 @@ conditions hold:
 The user agent MUST use an algorithm equivalent to the following algorithm to
 compute the `default-path` of a cookie:
 
-1.  Let `uri-path` be the `path` portion of the `request-uri` if such a portion
+1. Let `uri-path` be the `path` portion of the `request-uri` if such a portion
     exists (and empty otherwise). For example, if the `request-uri` contains
     just a path (and optional query string), then the `uri-path` is that path
     (without the %x3F ("?") character or query string), and if the `request-uri`
     contains a full `absoluteURI`, the `uri-path` is the `path` component of
     that URI.
 
-2.  If the `uri-path` is empty or if the first character of the `uri-path` is
+2. If the `uri-path` is empty or if the first character of the `uri-path` is
     not a %x2F ("/") character, output %x2F ("/") and skip the remaining steps.
 
-3.  If the `uri-path` contains no more than one %x2F ("/") character, output
+3. If the `uri-path` contains no more than one %x2F ("/") character, output
     %x2F ("/") and skip the remaining step.
 
-4.  Output the characters of the `uri-path` from the first character up to, but
+4. Output the characters of the `uri-path` from the first character up to, but
     not including, the right-most %x2F ("/").
 
 A `request-path` path-matches a given `cookie-path` if at least one of the
@@ -761,72 +761,72 @@ recommendations in Section 4.
 A user agent MUST use an algorithm equivalent to the following algorithm to
 parse a `set-cookie-string`:
 
-1.  If the set-cookie-string contains a %x3B (";") character:
+1. If the set-cookie-string contains a %x3B (";") character:
 
-    1.  The `name-value-pair` string consists of the characters up to, but not
+    1. The `name-value-pair` string consists of the characters up to, but not
         including, the first %x3B (";"), and the unparsed-attributes consist of
         the remainder of the `set-cookie-string` (including the %x3B (";") in
         question).
 
     Otherwise:
 
-    1.  The `name-value-pair` string consists of all the characters contained in
+    1. The `name-value-pair` string consists of all the characters contained in
         the `set-cookie-string`, and the `unparsed-attributes` is the empty
         string.
 
-2.  If the `name-value-pair` string lacks a %x3D ("=") character, ignore the
+2. If the `name-value-pair` string lacks a %x3D ("=") character, ignore the
     `set-cookie-string` entirely.
 
-3.  The (possibly empty) `name` string consists of the characters up to, but not
+3. The (possibly empty) `name` string consists of the characters up to, but not
     including, the first %x3D ("=") character, and the (possibly empty) value
     string consists of the characters after the first %x3D ("=") character.
 
-4.  Remove any leading or trailing WSP characters from the `name` string and the
+4. Remove any leading or trailing WSP characters from the `name` string and the
     `value` string.
 
-5.  If the `name` string is empty, ignore the `set-cookie-string` entirely.
+5. If the `name` string is empty, ignore the `set-cookie-string` entirely.
 
-6.  The `cookie-name` is the `name` string, and the `cookie-value` is the `value` string.
+6. The `cookie-name` is the `name` string, and the `cookie-value` is the `value` string.
 
 The user agent MUST use an algorithm equivalent to the following algorithm to
 parse the `unparsed-attributes`:
 
-1.  If the `unparsed-attributes` string is empty, skip the rest of these steps.
+1. If the `unparsed-attributes` string is empty, skip the rest of these steps.
 
-2.  Discard the first character of the `unparsed-attributes` (which will be a
+2. Discard the first character of the `unparsed-attributes` (which will be a
     %x3B (";") character).
 
-3.  If the remaining `unparsed-attributes` contains a %x3B (";") character:
+3. If the remaining `unparsed-attributes` contains a %x3B (";") character:
 
-    1.  Consume the characters of the `unparsed-attributes` up to, but not
+    1. Consume the characters of the `unparsed-attributes` up to, but not
         including, the first %x3B (";") character.
 
     Otherwise:
 
-    1.  Consume the remainder of the `unparsed-attributes`.
+    1. Consume the remainder of the `unparsed-attributes`.
 
     Let the `cookie-av` string be the characters consumed in this step.
 
-4.  If the `cookie-av` string contains a %x3D ("=") character:
+4. If the `cookie-av` string contains a %x3D ("=") character:
 
-    1.  The (possibly empty) `attribute-name` string consists of the characters
+    1. The (possibly empty) `attribute-name` string consists of the characters
         up to, but not including, the first %x3D ("=") character, and the
         (possibly empty) `attribute-value` string consists of the characters
         after the first %x3D ("=") character.
 
     Otherwise:
 
-    1.  The `attribute-name` string consists of the entire `cookie-av` string,
+    1. The `attribute-name` string consists of the entire `cookie-av` string,
         and the `attribute-value` string is empty.
 
-5.  Remove any leading or trailing WSP characters from the `attribute-name`
+5. Remove any leading or trailing WSP characters from the `attribute-name`
     string and the `attribute-value` string.
 
-6.  Process the `attribute-name` and `attribute-value` according to the
+6. Process the `attribute-name` and `attribute-value` according to the
     requirements in the following subsections. (Notice that attributes with
     unrecognized `attribute-names` are ignored.)
 
-7.  Return to Step 1 of this algorithm.
+7. Return to Step 1 of this algorithm.
 
 When the user agent finishes parsing the `set-cookie-string`, the user agent is
 said to "receive a cookie" from the `request-uri` with name `cookie-name`,
@@ -838,21 +838,21 @@ for additional requirements triggered by receiving a cookie.)
 If the `attribute-name` case-insensitively matches the string "Expires", the
 user agent MUST process the `cookie-av` as follows.
 
-1.  Let the `expiry-time` be the result of parsing the `attribute-value` as
+1. Let the `expiry-time` be the result of parsing the `attribute-value` as
     `cookie-date` (see Section 5.1.1).
 
-2.  If the `attribute-value` failed to parse as a cookie date, ignore the
+2. If the `attribute-value` failed to parse as a cookie date, ignore the
     `cookie-av`.
 
-3.  If the `expiry-time` is later than the last date the user agent can
+3. If the `expiry-time` is later than the last date the user agent can
     represent, the user agent MAY replace the expiry-time with the last
     representable date.
 
-4.  If the `expiry-time` is earlier than the earliest date the user agent can
+4. If the `expiry-time` is earlier than the earliest date the user agent can
     represent, the user agent MAY replace the `expiry-time` with the earliest
     representable date.
 
-5.  Append an attribute to the `cookie-attribute-list` with an `attribute-name`
+5. Append an attribute to the `cookie-attribute-list` with an `attribute-name`
     of Expires and an `attribute-value` of `expiry-time`.
 
 ### The Max-Age Attribute
@@ -860,45 +860,45 @@ user agent MUST process the `cookie-av` as follows.
 If the `attribute-name` case-insensitively matches the string "Max-Age", the
 user agent MUST process the `cookie-av` as follows.
 
-1.  If the first character of the `attribute-value` is not a DIGIT or a "-" character, ignore the `cookie-av`.
-2.  If the remainder of `attribute-value` contains a non-DIGIT character, ignore the `cookie-av`.
-3.  Let `delta-seconds` be the `attribute-value` converted to an integer.
-4.  If `delta-seconds` is less than or equal to zero (0), let `expiry-time` be the earliest representable date and time.  Otherwise, let the `expiry-time` be the current date and time plus `delta-seconds` seconds. 
-5.  Append an attribute to the `cookie-attribute-list` with an attribute-name of `Max-Age` and an `attribute-value` of `expiry-time`.
+1. If the first character of the `attribute-value` is not a DIGIT or a "-" character, ignore the `cookie-av`.
+2. If the remainder of `attribute-value` contains a non-DIGIT character, ignore the `cookie-av`.
+3. Let `delta-seconds` be the `attribute-value` converted to an integer.
+4. If `delta-seconds` is less than or equal to zero (0), let `expiry-time` be the earliest representable date and time. Otherwise, let the `expiry-time` be the current date and time plus `delta-seconds` seconds. 
+5. Append an attribute to the `cookie-attribute-list` with an attribute-name of `Max-Age` and an `attribute-value` of `expiry-time`.
 
 ### The Domain Attribute
 
 If the `attribute-name` case-insensitively matches the string "Domain", the user agent MUST process the `cookie-av` as follows.
 
-1.  If the `attribute-value` is empty, the behavior is undefined.  However, the user agent SHOULD ignore the `cookie-av` entirely.
+1. If the `attribute-value` is empty, the behavior is undefined. However, the user agent SHOULD ignore the `cookie-av` entirely.
 
-2.  If the first character of the `attribute-value` string is %x2E ("."):
+2. If the first character of the `attribute-value` string is %x2E ("."):
 
-    1.  Let `cookie-domain` be the `attribute-value` without the leading %x2E
+    1. Let `cookie-domain` be the `attribute-value` without the leading %x2E
         (".") character.
 
     Otherwise:
 
-    1.  Let `cookie-domain` be the entire `attribute-value`.
+    1. Let `cookie-domain` be the entire `attribute-value`.
 
-3.  Convert the `cookie-domain` to lower case.
+3. Convert the `cookie-domain` to lower case.
 
-4.  Append an attribute to the `cookie-attribute-list` with an `attribute-name`
+4. Append an attribute to the `cookie-attribute-list` with an `attribute-name`
     of `Domain` and an `attribute-value` of `cookie-domain`.
 
 ### The Path Attribute
 
 If the `attribute-name` case-insensitively matches the string "Path", the user agent MUST process the `cookie-av` as follows.
 
-1.  If the `attribute-value` is empty or if the first character of the `attribute-value` is not %x2F ("/"):
+1. If the `attribute-value` is empty or if the first character of the `attribute-value` is not %x2F ("/"):
 
-    1.  Let `cookie-path` be the `default-path`.
+    1. Let `cookie-path` be the `default-path`.
 
     Otherwise:
 
-    1.  Let `cookie-path` be the `attribute-value`.
+    1. Let `cookie-path` be the `attribute-value`.
 
-2.  Append an attribute to the `cookie-attribute-list` with an `attribute-name` of Path and an `attribute-value` of `cookie-path`.
+2. Append an attribute to the `cookie-attribute-list` with an `attribute-name` of Path and an `attribute-value` of `cookie-path`.
 
 ### The Secure Attribute
 
@@ -910,7 +910,239 @@ If the `attribute-name` case-insensitively matches the string "HttpOnly", the us
 
 ## Storage Model
 
-TODO: Copy/paste.
+The user agent stores the following fields about each cookie: `name`, `value`,
+`expiry-time`, `domain`, `path`, `creation-time`, `last-access-time`,
+`persistent-flag`, `host-only-flag`, `secure-only-flag`, and `http-only-flag`.
+
+When the user agent "receives a cookie" from a `request-uri` with name
+`cookie-name`, value `cookie-value`, and attributes `cookie-attribute-list`, the
+user agent MUST process the cookie as follows:
+
+1.  A user agent MAY ignore a received cookie in its entirety. For example, the
+    user agent might wish to block receiving cookies from "third-party"
+    responses or the user agent might not wish to store cookies that exceed some
+    size.
+
+2.  Create a new cookie with name `cookie-name`, value `cookie-value`. Set the
+    `creation-time` and the `last-access-time` to the current date and time.
+
+3.  If the `cookie-attribute-list` contains an attribute with an attribute-name
+    of "Max-Age":
+
+    1.  Set the cookie's `persistent-flag` to true.
+
+    2.  Set the cookie's `expiry-time` to `attribute-value` of the last
+        attribute in the cookie-attribute-list with an `attribute-name` of
+        "Max-Age".
+
+    Otherwise, if the `cookie-attribute-list` contains an attribute with an
+    `attribute-name` of "Expires" (and does not contain an attribute with an
+    `attribute-name` of "Max-Age"):
+
+    1.  Set the cookie's `persistent-flag` to true.
+
+    2.  Set the cookie's `expiry-time` to `attribute-value` of the last
+        attribute in the `cookie-attribute-list` with an `attribute-name` of
+        "Expires".
+
+    Otherwise:
+
+    1.  Set the cookie's `persistent-flag` to false.
+
+    2.  Set the cookie's `expiry-time` to the latest representable date.
+
+4.  If the `cookie-attribute-list` contains an attribute with an
+    `attribute-name` iof "Domain":
+
+    1.  Let the `domain-attribute` be the `attribute-value` of the last
+        attribute in the `cookie-attribute-list` with an `attribute-name` of
+        "Domain".
+
+    Otherwise:
+
+    1.  Let the `domain-attribute` be the empty string.
+
+5.  If the user agent is configured to reject "public suffixes" and the
+    `domain-attribute` is a public suffix:
+
+    1.  If the `domain-attribute` is identical to the canonicalized
+        `request-host`:
+
+        1.  Let the `domain-attribute` be the empty string.
+
+        Otherwise:
+
+        1.  Ignore the cookie entirely and abort these steps.
+
+    NOTE: A "public suffix" is a domain that is controlled by a public registry,
+    such as "com", "co.uk", and "pvt.k12.wy.us". This step is essential for
+    preventing attacker.com from disrupting the integrity of example.com by
+    setting a cookie with a `Domain` attribute of "com". Unfortunately, the set
+    of public suffixes (also known as "registry controlled domains") changes
+    over time. If feasible, user agents SHOULD use an up-to-date public suffix
+    list, such as the one maintained by the Mozilla project at
+    <http://publicsuffix.org/>.
+
+6.  If the `domain-attribute` is non-empty:
+
+    1.  If the canonicalized request-host does not domain-match the
+        `domain-attribute`:
+
+        1.  Ignore the cookie entirely and abort these steps.
+
+        Otherwise:
+
+        1.  Set the cookie's `host-only-flag` to false.
+
+        2.  Set the cookie's `domain` to the `domain-attribute`.
+
+    Otherwise:
+
+    1.  Set the cookie's `host-only-flag` to true.
+
+    2.  Set the cookie's `domain` to the canonicalized request-host.
+
+7.  If the `cookie-attribute-list` contains an attribute with an
+    `attribute-name` of "Path", set the cookie's `path` to `attribute-value` of
+    the last attribute in the `cookie-attribute-list` with an `attribute-name`
+    of "Path". Otherwise, set the cookie's `path` to the `default-path` of the
+    `request-uri`.
+
+8.  If the `cookie-attribute-list` contains an attribute with an
+    `attribute-name` of "Secure", set the cookie's `secure-only-flag` to true.
+    Otherwise, set the cookie's `secure-only-flag` to false.
+
+9.  If the `cookie-attribute-list` contains an attribute with an
+    `attribute-name` of "HttpOnly", set the cookie's `http-only-flag` to true.
+    Otherwise, set the cookie's `http-only-flag` to false.
+
+10. If the cookie was received from a "non-HTTP" API and the cookie's
+    `http-only-flag` is set, abort these steps and ignore the cookie entirely.
+
+11. If the cookie store contains a cookie with the same `name`, `domain`, and
+    `path` as the newly created cookie:
+
+    1. Let `old-cookie` be the existing cookie with the same `name`, `domain`,
+       and `path` as the newly created cookie. (Notice that this algorithm
+       maintains the invariant that there is at most one such cookie.)
+
+    2. If the newly created cookie was received from a "non-HTTP" API and the
+       `old-cookie`'s `http-only-flag` is set, abort these steps and ignore the
+       newly created cookie entirely.
+
+    3. Update the `creation-time` of the newly created cookie to match the
+       `creation-time` of the `old-cookie`.
+
+    4. Remove the `old-cookie` from the cookie store.
+
+12. Insert the newly created cookie into the cookie store.
+
+A cookie is "expired" if the cookie has an expiry date in the past.
+
+The user agent MUST evict all expired cookies from the cookie store if, at any
+time, an expired cookie exists in the cookie store.
+
+At any time, the user agent MAY "remove excess cookies" from the cookie store
+if the number of cookies sharing a domain field exceeds some
+implementation-defined upper bound (such as 50 cookies).
+
+At any time, the user agent MAY "remove excess cookies" from the cookie store
+if the cookie store exceeds some predetermined upper bound (such as 3000
+cookies).
+
+When the user agent removes excess cookies from the cookie store, the user
+agent MUST evict cookies in the following priority order:
+
+1. Expired cookies.
+
+2. Cookies that share a domain field with more than a predetermined number of
+   other cookies.
+
+3. All cookies.
+
+If two cookies have the same removal priority, the user agent MUST evict the
+cookie with the earliest `last-access` date first.
+
+When "the current session is over" (as defined by the user agent), the user
+agent MUST remove from the cookie store all cookies with the `persistent-flag`
+set to false.
+
+## The Cookie Header
+
+The user agent includes stored cookies in the `Cookie` HTTP request header.
+
+When the user agent generates an HTTP request, the user agent MUST NOT attach
+more than one `Cookie` header field.
+
+A user agent MAY omit the `Cookie` header in its entirety.  For example, the
+user agent might wish to block sending cookies during "third-party" requests
+from setting cookies (see Section 7.1).
+
+If the user agent does attach a `Cookie` header field to an HTTP request, the
+user agent MUST send the `cookie-string` (defined below) as the value of the
+header field.
+
+The user agent MUST use an algorithm equivalent to the following algorithm to
+compute the `cookie-string` from a cookie store and a `request-uri`:
+
+1.  Let `cookie-list` be the set of cookies from the cookie store that meets all
+    of the following requirements:
+
+    *   Either:
+
+        *   The cookie's `host-only-flag` is true and the canonicalized
+            request-host is identical to the cookie's `domain`.
+
+        Or:
+
+        *   The cookie's `host-only-flag` is false and the canonicalized
+            request-host domain-matches the cookie's `domain`.
+
+    *   The `request-uri`'s `path` path-matches the cookie's `path`.
+
+    *  If the cookie's `secure-only-flag` is true, then the request-uri's
+       scheme must denote a "secure" protocol (as defined by the user agent).
+
+       NOTE: The notion of a "secure" protocol is not defined by this document.
+       Typically, user agents consider a protocol secure if the protocol makes
+       use of transport-layer security, such as SSL or TLS. For example, most
+       user agents consider "https" to be a scheme that denotes a secure
+       protocol.
+
+    *  If the cookie's `http-only-flag` is true, then exclude the cookie if the
+       `cookie-string` is being generated for a "non-HTTP" API (as defined by
+       the user agent).
+
+2.  The user agent SHOULD sort the `cookie-list` in the following order:
+
+    *  Cookies with longer `path`s are listed before cookies with shorter
+       `path`s.
+
+    *  Among cookies that have equal-length `path` fields, cookies with earlier
+       `creation-times` are listed before cookies with later `creation-times`.
+
+    NOTE: Not all user agents sort the cookie-list in this order, but this order
+    reflects common practice when this document was written, and, historically,
+    there have been servers that (erroneously) depended on this order.
+
+3.  Update the `last-access-time` of each cookie in the `cookie-list` to the
+    current date and time.
+
+4.  Serialize the `cookie-list` into a `cookie-string` by processing each cookie
+    in the `cookie-list` in order:
+
+    1.  Output the cookie's `name`, the %x3D ("=") character, and the cookie's
+        `value`.
+
+    2.  If there is an unprocessed cookie in the `cookie-list`, output the
+        characters %x3B and %x20 ("; ").
+
+NOTE: Despite its name, the cookie-string is actually a sequence of octets, not
+a sequence of characters.  To convert the `cookie-string` (or components
+thereof) into a sequence of characters (e.g., for presentation to the user),
+the user agent might wish to try using the UTF-8 character encoding {{RFC3629}}
+to decode the octet sequence. This decoding might fail, however, because not
+every sequence of octets is valid UTF-8.
 
 # Implementation Considerations
 
@@ -965,7 +1197,7 @@ IDNA2003 {{RFC3490}}.
 
 Cookies are often criticized for letting servers track users. For example, a
 number of "web analytics" companies use cookies to recognize when a user returns
-to a web site or visits another web site.  Although cookies are not the only
+to a web site or visits another web site. Although cookies are not the only
 mechanism servers can use to track users across HTTP requests, cookies
 facilitate tracking because they are persistent across user agent sessions and
 can be shared between hosts.
@@ -1031,18 +1263,18 @@ set to expire in two weeks.
 
 ## Overview
 
-Cookies have a number of security pitfalls.  This section overviews a few of the
+Cookies have a number of security pitfalls. This section overviews a few of the
 more salient issues.
 
 In particular, cookies encourage developers to rely on ambient authority for
 authentication, often becoming vulnerable to attacks such as cross-site request
-forgery {{CSRF}}.  Also, when storing session identifiers in cookies, developers
+forgery {{CSRF}}. Also, when storing session identifiers in cookies, developers
 often create session fixation vulnerabilities.
 
 Transport-layer encryption, such as that employed in HTTPS, is insufficient to
 prevent a network attacker from obtaining or altering a victim's cookies because
 the cookie protocol itself has various vulnerabilities (see "Weak Confidentiality"
-and "Weak Integrity", below).  In addition, by default, cookies do not provide
+and "Weak Integrity", below). In addition, by default, cookies do not provide
 confidentiality or integrity from network attackers, even when used in conjunction
 with HTTPS.
 
@@ -1050,14 +1282,14 @@ with HTTPS.
 
 A server that uses cookies to authenticate users can suffer security
 vulnerabilities because some user agents let remote parties issue HTTP requests
-from the user agent (e.g., via HTTP redirects or HTML forms).  When issuing
+from the user agent (e.g., via HTTP redirects or HTML forms). When issuing
 those requests, user agents attach cookies even if the remote party does not
 know the contents of the cookies, potentially letting the remote party exercise
 authority at an unwary server.
 
 Although this security concern goes by a number of names (e.g., cross-site
 request forgery, confused deputy), the issue stems from cookies being a form of
-ambient authority.  Cookies encourage server operators to separate designation
+ambient authority. Cookies encourage server operators to separate designation
 (in the form of URLs) from authorization (in the form of cookies).
 Consequently, the user agent might supply the authorization for a resource
 designated by the attacker, possibly causing the server or its clients to
@@ -1066,7 +1298,7 @@ the user.
 
 Instead of using cookies for authorization, server operators might wish to
 consider entangling designation and authorization by treating URLs as
-capabilities.  Instead of storing secrets in cookies, this approach stores
+capabilities. Instead of storing secrets in cookies, this approach stores
 secrets in URLs, requiring the remote entity to supply the secret itself.
 Although this approach is not a panacea, judicious application of these
 principles can lead to more robust security.
@@ -1076,13 +1308,13 @@ principles can lead to more robust security.
 Unless sent over a secure channel (such as TLS), the information in the `Cookie`
 and `Set-Cookie` headers is transmitted in the clear.
 
-1.  All sensitive information conveyed in these headers is exposed to an
+1. All sensitive information conveyed in these headers is exposed to an
     eavesdropper.
 
-2.  A malicious intermediary could alter the headers as they travel in either
+2. A malicious intermediary could alter the headers as they travel in either
     direction, with unpredictable results.
 
-3.  A malicious client could alter the `Cookie` header before transmission,
+3. A malicious client could alter the `Cookie` header before transmission,
     with unpredictable results.
 
 Servers SHOULD encrypt and sign the contents of cookies (using whatever format
@@ -1093,19 +1325,19 @@ agent to another or from replaying the cookie at a later time.
 
 In addition to encrypting and signing the contents of every cookie, servers that
 require a higher level of security SHOULD use the `Cookie` and `Set-Cookie`
-headers only over a secure channel.  When using cookies over a secure channel,
+headers only over a secure channel. When using cookies over a secure channel,
 servers SHOULD set the `Secure` attribute (see Section 4.1.2.5) for every
-cookie.  If a server does not set the `Secure` attribute, the protection
+cookie. If a server does not set the `Secure` attribute, the protection
 provided by the secure channel will be largely moot.
 
 For example, consider a webmail server that stores a session identifier in a
-cookie and is typically accessed over HTTPS.  If the server does not set the
+cookie and is typically accessed over HTTPS. If the server does not set the
 `Secure` attribute on its cookies, an active network attacker can intercept any
 outbound HTTP request from the user agent and redirect that request to the
 webmail server over HTTP. Even if the webmail server is not listening for HTTP
-connections, the user agent will still include cookies in the request.  The
+connections, the user agent will still include cookies in the request. The
 active network attacker can intercept these cookies, replay them against the
-server, and learn the contents of the user's email.  If, instead, the server had
+server, and learn the contents of the user's email. If, instead, the server had
 set the `Secure` attribute on its cookies, the user agent would not have
 included the cookies in the clear-text request.
 
@@ -1113,21 +1345,21 @@ included the cookies in the clear-text request.
 
 Instead of storing session information directly in a cookie (where it might be
 exposed to or replayed by an attacker), servers commonly store a nonce (or
-"session identifier") in a cookie.  When the server receives an HTTP request
+"session identifier") in a cookie. When the server receives an HTTP request
 with a nonce, the server can look up state information associated with the
 cookie using the nonce as a key.
 
 Using session identifier cookies limits the damage an attacker can cause if the
 attacker learns the contents of a cookie because the nonce is useful only for
 interacting with the server (unlike non-nonce cookie content, which might itself
-be sensitive).  Furthermore, using a single nonce prevents an attacker from
+be sensitive). Furthermore, using a single nonce prevents an attacker from
 "splicing" together cookie content from two interactions with the server, which
 could cause the server to behave unexpectedly.
 
-Using session identifiers is not without risk.  For example, the server SHOULD
+Using session identifiers is not without risk. For example, the server SHOULD
 take care to avoid "session fixation" vulnerabilities. A session fixation attack
-proceeds in three steps.  First, the attacker transplants a session identifier
-from his or her user agent to the victim's user agent.  Second, the victim uses
+proceeds in three steps. First, the attacker transplants a session identifier
+from his or her user agent to the victim's user agent. Second, the victim uses
 that session identifier to interact with the server, possibly imbuing the
 session identifier with the user's credentials or confidential information.
 Third, the attacker uses the session identifier to interact with server
@@ -1143,7 +1375,7 @@ For this reason, servers SHOULD NOT both run mutually distrusting services on
 different ports of the same host and use cookies to store security-sensitive
 information.
 
-Cookies do not provide isolation by scheme.  Although most commonly used with
+Cookies do not provide isolation by scheme. Although most commonly used with
 the http and https schemes, the cookies for a given host might also be
 available to other schemes, such as ftp and gopher. Although this lack of
 isolation by scheme is most apparent in non-HTTP APIs that permit access to
@@ -1165,41 +1397,41 @@ subdomains). For example, consider `foo.example.com` and `bar.example.com`. The
 `foo.example.com` server can set a cookie with a `Domain` attribute of
 "`example.com`" (possibly overwriting an existing "`example.com`" cookie set by
 `bar.example.com`), and the user agent will include that cookie in HTTP requests
-to `bar.example.com`.  In the worst case, `bar.example.com` will be unable to
+to `bar.example.com`. In the worst case, `bar.example.com` will be unable to
 distinguish this cookie from a cookie it set itself. The `foo.example.com`
 server might be able to leverage this ability to mount an attack against
 `bar.example.com`.
 
 Even though the `Set-Cookie` header supports the `Path` attribute, the `Path`
 attribute does not provide any integrity protection because the user agent
-will accept an arbitrary `Path` attribute in a `Set-Cookie` header.  For
+will accept an arbitrary `Path` attribute in a `Set-Cookie` header. For
 example, an HTTP response to a request for `http://example.com/foo/bar` can set
-a cookie with a `Path` attribute of "/qux".  Consequently, servers SHOULD NOT
+a cookie with a `Path` attribute of "/qux". Consequently, servers SHOULD NOT
 both run mutually distrusting services on different paths of the same host and
 use cookies to store security-sensitive information.
 
 An active network attacker can also inject cookies into the `Cookie` header
 sent to `https://example.com/` by impersonating a response from
-`http://example.com/` and injecting a `Set-Cookie` header.  The HTTPS server
+`http://example.com/` and injecting a `Set-Cookie` header. The HTTPS server
 at `example.com` will be unable to distinguish these cookies from cookies that
-it set itself in an HTTPS response.  An active network attacker might be able
+it set itself in an HTTPS response. An active network attacker might be able
 to leverage this ability to mount an attack against `example.com` even if
 `example.com` uses HTTPS exclusively.
 
 Servers can partially mitigate these attacks by encrypting and signing the
-contents of their cookies.  However, using cryptography does not mitigate the
+contents of their cookies. However, using cryptography does not mitigate the
 issue completely because an attacker can replay a cookie he or she received from
 the authentic `example.com` server in the user's session, with unpredictable
 results.
 
 Finally, an attacker might be able to force the user agent to delete cookies by
-storing a large number of cookies.  Once the user agent reaches its storage
-limit, the user agent will be forced to evict some cookies.  Servers SHOULD NOT
+storing a large number of cookies. Once the user agent reaches its storage
+limit, the user agent will be forced to evict some cookies. Servers SHOULD NOT
 rely upon user agents retaining cookies.
 
 ## Reliance on DNS
 
-Cookies rely upon the Domain Name System (DNS) for security.  If the DNS is
+Cookies rely upon the Domain Name System (DNS) for security. If the DNS is
 partially or fully compromised, the cookie protocol might fail to provide the
 security properties required by applications.
 
@@ -1280,10 +1512,10 @@ Specification document:
 
 # Acknowledgements
 
-This document borrows heavily from RFC 2109 {{RFC2109}}.  We are indebted to
-David M. Kristol and Lou Montulli for their efforts to specify cookies.  David
+This document borrows heavily from RFC 2109 {{RFC2109}}. We are indebted to
+David M. Kristol and Lou Montulli for their efforts to specify cookies. David
 M. Kristol, in particular, provided invaluable advice on navigating the IETF
-process.  We would also like to thank Thomas Broyer, Tyler Close, Alissa Cooper,
+process. We would also like to thank Thomas Broyer, Tyler Close, Alissa Cooper,
 Bil Corry, corvid, Lisa Dusseault, Roy T. Fielding, Blake Frantz, Anne van
 Kesteren, Eran Hammer-Lahav, Jeff Hodges, Bjoern Hoehrmann, Achim Hoffmann,
 Georg Koppen, Dean McNamee, Alexey Melnikov, Mark Miller, Mark Pauley, Yngve N.
