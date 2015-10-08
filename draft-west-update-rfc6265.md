@@ -208,7 +208,7 @@ whitespace characters MAY appear:
 
 ~~~ abnf
 OWS            = *( [ obs-fold ] WSP )
-                ; "optional" whitespace
+                 ; "optional" whitespace
 obs-fold       = CRLF
 ~~~
 
@@ -266,6 +266,7 @@ are within the scope of the cookie. For example, the server can send the user
 agent a "session identifier" named SIDwith the value `31d4d96e407aad42`. The
 user agent then returns the session identifier in subsequent requests.
 
+~~~
 == Server -> User Agent ==
 
 Set-Cookie: SID=31d4d96e407aad42
@@ -273,11 +274,13 @@ Set-Cookie: SID=31d4d96e407aad42
 == User Agent -> Server ==
 
 Cookie: SID=31d4d96e407aad42
+~~~
 
 The server can alter the default scope of the cookie using the `Path` and
 `Domain` attributes. For example, the server can instruct the user agent to
 return the cookie to every path and every subdomain of example.com.
 
+~~~
 == Server -> User Agent ==
 
 Set-Cookie: SID=31d4d96e407aad42; Path=/; Domain=example.com
@@ -285,6 +288,7 @@ Set-Cookie: SID=31d4d96e407aad42; Path=/; Domain=example.com
 == User Agent -> Server ==
 
 Cookie: SID=31d4d96e407aad42
+~~~
 
 As shown in the next example, the server can store multiple cookies at the user
 agent. For example, the server can store a session identifier as well as the
@@ -293,6 +297,7 @@ that the server uses the `Secure` and `HttpOnly` attributes to provide
 additional security protections for the more sensitive session identifier (see
 Section 4.1.2).
 
+~~~
 == Server -> User Agent ==
 
 Set-Cookie: SID=31d4d96e407aad42; Path=/; Secure; HttpOnly
@@ -301,6 +306,7 @@ Set-Cookie: lang=en-US; Path=/; Domain=example.com
 == User Agent -> Server ==
 
 Cookie: SID=31d4d96e407aad42; lang=en-US
+~~~
 
 Notice that the `Cookie` header above contains two cookies, one named `SID` and
 one named `lang`. If the server wishes the user agent to persist the cookie over
@@ -309,6 +315,7 @@ expiration date in the `Expires` attribute.  Note that the user agent might
 delete the cookie before the expiration date if the user agent's cookie store
 exceeds its quota or if the user manually deletes the server's cookie.
 
+~~~
 == Server -> User Agent ==
 
 Set-Cookie: lang=en-US; Expires=Wed, 09 Jun 2021 10:18:14 GMT
@@ -316,12 +323,14 @@ Set-Cookie: lang=en-US; Expires=Wed, 09 Jun 2021 10:18:14 GMT
 == User Agent -> Server ==
 
 Cookie: SID=31d4d96e407aad42; lang=en-US
+~~~
 
 Finally, to remove a cookie, the server returns a `Set-Cookie` header with an
 expiration date in the past.  The server will be successful in removing the
 cookie only if the `Path` and the `Domain` attribute in the Set-Cookie header
 match the values used when the cookie was created.
 
+~~~
 == Server -> User Agent ==
 
 Set-Cookie: lang=; Expires=Sun, 06 Nov 1994 08:49:37 GMT
@@ -329,6 +338,7 @@ Set-Cookie: lang=; Expires=Sun, 06 Nov 1994 08:49:37 GMT
 == User Agent -> Server ==
 
 Cookie: SID=31d4d96e407aad42
+~~~
 
 # Server Requirements
 
@@ -392,7 +402,7 @@ To maximize compatibility with user agents, servers that wish to store arbitrary
 data in a cookie-value SHOULD encode that data, for example, using Base64
 {{RFC4648}}.
 
-The portions of the `set-cookie-string` produced by the `cookie-av` term` are
+The portions of the `set-cookie-string` produced by the `cookie-av` term are
 known as attributes. To maximize compatibility with user agents, servers SHOULD
 NOT produce two attributes with the same name in the same `set-cookie-string`.
 (See Section 5.3 for how user agents handle this case.)
@@ -699,11 +709,208 @@ conditions hold:
 
 ### Paths and Path-Match
 
-TODO: Copy.
+The user agent MUST use an algorithm equivalent to the following algorithm to
+compute the `default-path` of a cookie:
+
+1.  Let `uri-path` be the `path` portion of the `request-uri` if such a portion
+    exists (and empty otherwise). For example, if the `request-uri` contains
+    just a path (and optional query string), then the `uri-path` is that path
+    (without the %x3F ("?") character or query string), and if the `request-uri`
+    contains a full `absoluteURI`, the `uri-path` is the `path` component of
+    that URI.
+
+2.  If the `uri-path` is empty or if the first character of the `uri-path` is
+    not a %x2F ("/") character, output %x2F ("/") and skip the remaining steps.
+
+3.  If the `uri-path` contains no more than one %x2F ("/") character, output
+    %x2F ("/") and skip the remaining step.
+
+4.  Output the characters of the `uri-path` from the first character up to, but
+    not including, the right-most %x2F ("/").
+
+A `request-path` path-matches a given `cookie-path` if at least one of the
+following conditions holds:
+
+*   The `cookie-path` and the `request-path` are identical.
+
+*   The `cookie-path` is a prefix of the `request-path`, and the last character
+    of the `cookie-path` is %x2F ("/").
+
+*   The `cookie-path` is a prefix of the `request-path`, and the first character
+    of the `request-path` that is not included in the `cookie-path` is a %x2F
+    ("/") character.
 
 ## The Set-Cookie Header
 
-TODO: Copy.
+When a user agent receives a `Set-Cookie` header field in an HTTP response, the
+user agent MAY ignore the `Set-Cookie` header field in its entirety. For
+example, the user agent might wish to block responses to "third-party" requests
+from setting cookies (see Section 7.1).
+
+If the user agent does not ignore the `Set-Cookie` header field in its entirety,
+the user agent MUST parse the field-value of the `Set-Cookie` header field as a
+`set-cookie-string` (defined below).
+
+NOTE: The algorithm below is more permissive than the grammar in Section 4.1.
+For example, the algorithm strips leading and trailing whitespace from the
+cookie name and value (but maintains internal whitespace), whereas the grammar
+in Section 4.1 forbids whitespace in these positions. User agents use this
+algorithm so as to interoperate with servers that do not follow the
+recommendations in Section 4.
+
+A user agent MUST use an algorithm equivalent to the following algorithm to
+parse a `set-cookie-string`:
+
+1.  If the set-cookie-string contains a %x3B (";") character:
+
+    1.  The `name-value-pair` string consists of the characters up to, but not
+        including, the first %x3B (";"), and the unparsed-attributes consist of
+        the remainder of the `set-cookie-string` (including the %x3B (";") in
+        question).
+
+    Otherwise:
+
+    1.  The `name-value-pair` string consists of all the characters contained in
+        the `set-cookie-string`, and the `unparsed-attributes` is the empty
+        string.
+
+2.  If the `name-value-pair` string lacks a %x3D ("=") character, ignore the
+    `set-cookie-string` entirely.
+
+3.  The (possibly empty) `name` string consists of the characters up to, but not
+    including, the first %x3D ("=") character, and the (possibly empty) value
+    string consists of the characters after the first %x3D ("=") character.
+
+4.  Remove any leading or trailing WSP characters from the `name` string and the
+    `value` string.
+
+5.  If the `name` string is empty, ignore the `set-cookie-string` entirely.
+
+6.  The `cookie-name` is the `name` string, and the `cookie-value` is the `value` string.
+
+The user agent MUST use an algorithm equivalent to the following algorithm to
+parse the `unparsed-attributes`:
+
+1.  If the `unparsed-attributes` string is empty, skip the rest of these steps.
+
+2.  Discard the first character of the `unparsed-attributes` (which will be a
+    %x3B (";") character).
+
+3.  If the remaining `unparsed-attributes` contains a %x3B (";") character:
+
+    1.  Consume the characters of the `unparsed-attributes` up to, but not
+        including, the first %x3B (";") character.
+
+    Otherwise:
+
+    1.  Consume the remainder of the `unparsed-attributes`.
+
+    Let the `cookie-av` string be the characters consumed in this step.
+
+4.  If the `cookie-av` string contains a %x3D ("=") character:
+
+    1.  The (possibly empty) `attribute-name` string consists of the characters
+        up to, but not including, the first %x3D ("=") character, and the
+        (possibly empty) `attribute-value` string consists of the characters
+        after the first %x3D ("=") character.
+
+    Otherwise:
+
+    1.  The `attribute-name` string consists of the entire `cookie-av` string,
+        and the `attribute-value` string is empty.
+
+5.  Remove any leading or trailing WSP characters from the `attribute-name`
+    string and the `attribute-value` string.
+
+6.  Process the `attribute-name` and `attribute-value` according to the
+    requirements in the following subsections. (Notice that attributes with
+    unrecognized `attribute-names` are ignored.)
+
+7.  Return to Step 1 of this algorithm.
+
+When the user agent finishes parsing the `set-cookie-string`, the user agent is
+said to "receive a cookie" from the `request-uri` with name `cookie-name`,
+value `cookie-value`, and attributes `cookie-attribute-list`. (See Section 5.3
+for additional requirements triggered by receiving a cookie.)
+
+### The Expires Attribute
+
+If the `attribute-name` case-insensitively matches the string "Expires", the
+user agent MUST process the `cookie-av` as follows.
+
+1.  Let the `expiry-time` be the result of parsing the `attribute-value` as
+    `cookie-date` (see Section 5.1.1).
+
+2.  If the `attribute-value` failed to parse as a cookie date, ignore the
+    `cookie-av`.
+
+3.  If the `expiry-time` is later than the last date the user agent can
+    represent, the user agent MAY replace the expiry-time with the last
+    representable date.
+
+4.  If the `expiry-time` is earlier than the earliest date the user agent can
+    represent, the user agent MAY replace the `expiry-time` with the earliest
+    representable date.
+
+5.  Append an attribute to the `cookie-attribute-list` with an `attribute-name`
+    of Expires and an `attribute-value` of `expiry-time`.
+
+### The Max-Age Attribute
+
+If the `attribute-name` case-insensitively matches the string "Max-Age", the
+user agent MUST process the `cookie-av` as follows.
+
+1.  If the first character of the `attribute-value` is not a DIGIT or a "-" character, ignore the `cookie-av`.
+2.  If the remainder of `attribute-value` contains a non-DIGIT character, ignore the `cookie-av`.
+3.  Let `delta-seconds` be the `attribute-value` converted to an integer.
+4.  If `delta-seconds` is less than or equal to zero (0), let `expiry-time` be the earliest representable date and time.  Otherwise, let the `expiry-time` be the current date and time plus `delta-seconds` seconds. 
+5.  Append an attribute to the `cookie-attribute-list` with an attribute-name of `Max-Age` and an `attribute-value` of `expiry-time`.
+
+### The Domain Attribute
+
+If the `attribute-name` case-insensitively matches the string "Domain", the user agent MUST process the `cookie-av` as follows.
+
+1.  If the `attribute-value` is empty, the behavior is undefined.  However, the user agent SHOULD ignore the `cookie-av` entirely.
+
+2.  If the first character of the `attribute-value` string is %x2E ("."):
+
+    1.  Let `cookie-domain` be the `attribute-value` without the leading %x2E
+        (".") character.
+
+    Otherwise:
+
+    1.  Let `cookie-domain` be the entire `attribute-value`.
+
+3.  Convert the `cookie-domain` to lower case.
+
+4.  Append an attribute to the `cookie-attribute-list` with an `attribute-name`
+    of `Domain` and an `attribute-value` of `cookie-domain`.
+
+### The Path Attribute
+
+If the `attribute-name` case-insensitively matches the string "Path", the user agent MUST process the `cookie-av` as follows.
+
+1.  If the `attribute-value` is empty or if the first character of the `attribute-value` is not %x2F ("/"):
+
+    1.  Let `cookie-path` be the `default-path`.
+
+    Otherwise:
+
+    1.  Let `cookie-path` be the `attribute-value`.
+
+2.  Append an attribute to the `cookie-attribute-list` with an `attribute-name` of Path and an `attribute-value` of `cookie-path`.
+
+### The Secure Attribute
+
+If the `attribute-name` case-insensitively matches the string "Secure", the user agent MUST append an attribute to the `cookie-attribute-list` with an `attribute-name` of `Secure` and an empty `attribute-value`.
+
+### The HttpOnly Attribute
+
+If the `attribute-name` case-insensitively matches the string "HttpOnly", the user agent MUST append an attribute to the `cookie-attribute-list` with an `attribute-name` of `HttpOnly` and an empty `attribute-value`.
+
+## Storage Model
+
+TODO: Copy/paste.
 
 # Implementation Considerations
 
@@ -928,31 +1135,28 @@ directly, possibly obtaining the user's authority or confidential information.
 
 ## Weak Confidentiality
 
-   Cookies do not provide isolation by port.  If a cookie is readable by
-   a service running on one port, the cookie is also readable by a
-   service running on another port of the same server.  If a cookie is
-   writable by a service on one port, the cookie is also writable by a
-   service running on another port of the same server.  For this reason,
-   servers SHOULD NOT both run mutually distrusting services on
-   different ports of the same host and use cookies to store security-
-   sensitive information.
+Cookies do not provide isolation by port. If a cookie is readable by a service
+running on one port, the cookie is also readable by a service running on another
+port of the same server. If a cookie is writable by a service on one port, the
+cookie is also writable by a service running on another port of the same server.
+For this reason, servers SHOULD NOT both run mutually distrusting services on
+different ports of the same host and use cookies to store security-sensitive
+information.
 
-   Cookies do not provide isolation by scheme.  Although most commonly
-   used with the http and https schemes, the cookies for a given host
-   might also be available to other schemes, such as ftp and gopher.
-   Although this lack of isolation by scheme is most apparent in non-
-   HTTP APIs that permit access to cookies (e.g., HTML's document.cookie
-   API), the lack of isolation by scheme is actually present in
-   requirements for processing cookies themselves (e.g., consider
-   retrieving a URI with the gopher scheme via HTTP).
+Cookies do not provide isolation by scheme.  Although most commonly used with
+the http and https schemes, the cookies for a given host might also be
+available to other schemes, such as ftp and gopher. Although this lack of
+isolation by scheme is most apparent in non-HTTP APIs that permit access to
+cookies (e.g., HTML's `document.cookie` API), the lack of isolation by scheme
+is actually present in requirements for processing cookies themselves (e.g.,
+consider retrieving a URI with the gopher scheme via HTTP).
 
-   Cookies do not always provide isolation by path.  Although the
-   network-level protocol does not send cookies stored for one path to
-   another, some user agents expose cookies via non-HTTP APIs, such as
-   HTML's document.cookie API.  Because some of these user agents (e.g.,
-   web browsers) do not isolate resources received from different paths,
-   a resource retrieved from one path might be able to access cookies
-   stored for another path.
+Cookies do not always provide isolation by path. Although the network-level
+protocol does not send cookies stored for one path to another, some user
+agents expose cookies via non-HTTP APIs, such as HTML's `document.cookie` API.
+Because some of these user agents (e.g., web browsers) do not isolate resources
+received from different paths, a resource retrieved from one path might be able
+to access cookies stored for another path.
 
 ## Weak Integrity
 
